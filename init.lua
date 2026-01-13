@@ -138,6 +138,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- eslint_d is slow so using an autocmd to automatically apply ESlint's suggestions
+-- See https://github.com/stevearc/conform.nvim/issues/364#issuecomment-2308959873
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('EslintFixAll', { clear = true }),
+  pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+  command = 'silent! LspEslintFixAll',
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -167,6 +175,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-fugitive',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -355,6 +364,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>so', builtin.lsp_document_symbols, { desc = '[S]earch d[O]cument symbols' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -591,16 +601,26 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        gopls = {
+          settings = {
+            gopls = { buildFlags = { '-tags=integration' } },
+          },
+        },
+        pyright = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
+        -- FRONTEND SETUP
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        vtsls = {},
+        tailwindcss = {},
+        eslint = {},
+        html = {},
+        cssls = {},
+        jsonls = {},
         --
 
         lua_ls = {
@@ -680,7 +700,7 @@ require('lazy').setup({
           return nil
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 1000,
             lsp_format = 'fallback',
           }
         end
@@ -691,12 +711,18 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', stop_after_first = false },
+        typescript = { 'prettierd' },
+        javascriptreact = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        css = { 'prettierd' },
+        html = { 'prettierd' },
+        markdown = { 'prettierd' },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
         go = { 'gofumpt' },
       },
     },
   },
-
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
@@ -797,7 +823,22 @@ require('lazy').setup({
   },
   -- import everything under custom/plugins
   { import = 'custom.plugins' },
-
+  {
+    'windwp/nvim-ts-autotag',
+    ft = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+    config = true,
+  },
+  {
+    'laytan/tailwind-sorter.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-lua/plenary.nvim' },
+    build = 'cd formatter && npm i && npm run build',
+    config = true,
+  },
+  {
+    'chrisgrieser/nvim-early-retirement',
+    config = true,
+    event = 'VeryLazy',
+  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -845,6 +886,5 @@ require('lazy').setup({
     },
   },
 })
-
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 e

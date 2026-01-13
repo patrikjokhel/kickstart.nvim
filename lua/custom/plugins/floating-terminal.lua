@@ -50,4 +50,7 @@ end
 
 vim.api.nvim_create_user_command('Floaterminal', toggle_terminal, {})
 
-vim.keymap.set({ 'n', 't' }, '<leader>tt', '<cmd>Floaterminal<CR>', { desc = '[T]oggle floating [T]erminal' })
+vim.keymap.set('n', '<leader>tt', '<cmd>Floaterminal<CR>', { desc = '[T]oggle floating [T]erminal' })
+vim.keymap.set('t', '<C-q>', '<cmd>Floaterminal<CR>', { desc = 'Close floating terminal' })
+
+return {}
