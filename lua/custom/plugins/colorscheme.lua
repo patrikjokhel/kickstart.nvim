@@ -1,5 +1,15 @@
 return {
   {
+    dir = vim.fn.expand '~/Development/projects/cyberpunk.nvim',
+    enabled = false,
+    name = 'cyberpunk',
+    dev = { true },
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'cyberpunk'
+    end,
+  },
+  {
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
@@ -24,5 +34,13 @@ return {
       }
       vim.cmd.colorscheme 'catppuccin'
     end,
+  },
+  {
+    'Lambozhuang/cyberpunk.nvim',
+    enabled = false,
+    priority = 1000,
+    opts = {
+      transparent = true, -- set to true for transparent background
+    },
   },
 }

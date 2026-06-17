@@ -414,6 +414,7 @@ require('lazy').setup({
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'mfussenegger/nvim-jdtls',
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
@@ -616,6 +617,7 @@ require('lazy').setup({
         -- FRONTEND SETUP
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         vtsls = {},
+        -- tsgo = {},
         tailwindcss = {},
         eslint = {},
         html = {},
@@ -646,6 +648,7 @@ require('lazy').setup({
         -- certain features of an LSP (for example, turning off formatting for ts_ls)
         config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
         vim.lsp.config(name, config)
+        vim.lsp.enable(name)
       end
       -- Ensure the servers and tools above are installed
       --
@@ -669,6 +672,12 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        handlers = {
+          jdtls = function()
+            require('java').setup()
+            vim.lsp.enable 'jdtls'
+          end,
+        },
       }
     end,
   },
