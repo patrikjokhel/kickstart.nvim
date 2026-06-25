@@ -38,6 +38,7 @@ return { -- Autoformat
       typescript = { 'prettierd' },
       javascriptreact = { 'prettierd' },
       typescriptreact = { 'prettierd' },
+      xml = { 'lemminx' },
       css = { 'prettierd' },
       html = { 'prettierd' },
       markdown = { 'prettierd' },

@@ -201,8 +201,12 @@ return {
           gopls = { buildFlags = { '-tags=integration' } },
         },
       },
+      golangci_lint_ls = {},
+
       pyright = {},
       rust_analyzer = {},
+      jdtls = {},
+      lemminx = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
       --
       -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -259,6 +263,12 @@ return {
     -- for you, so that they are available from within Neovim.
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
+      'tree-sitter-cli',
+      'golangci-lint',
+      'staticcheck',
+      'gofumpt',
+      'delve',
+      'prettierd',
       'stylua', -- Used to format Lua code
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -275,3 +285,6 @@ return {
     }
   end,
 }
+
+-- The line beneath this is called `modeline`. See `:help modeline`
+-- vim: ts=2 sts=2 sw=2 et

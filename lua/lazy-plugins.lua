@@ -41,6 +41,7 @@ require('lazy').setup({
   require 'plugins.nvim-early-retirement',
   require 'plugins.nvim-lspconfig',
   require 'plugins.nvim-treesitter',
+  require 'plugins.nvim-treesitter-context',
   require 'plugins.nvim-ts-autotag',
   require 'plugins.oil',
   require 'plugins.super-maven',
