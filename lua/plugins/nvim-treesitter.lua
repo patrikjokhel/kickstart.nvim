@@ -36,6 +36,11 @@ return {
           'query',
           'vim',
           'vimdoc',
+          'git_config',
+          'git_rebase',
+          'gitcommit',
+          'gitattributes',
+          'gitignore',
           'typescript',
           'tsx',
           'javascript',
@@ -43,6 +48,7 @@ return {
           'css',
           'json',
           'go',
+          'sql',
         }
 
         local already_installed = require('nvim-treesitter.config').get_installed()
